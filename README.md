@@ -71,6 +71,10 @@ flowchart TD
     A26 --> A2
     A27 --> M
 ```
+# CDM
+
+# PDM
+[hotel_PDM.pdb](https://github.com/user-attachments/files/23394719/hotel_PDM.pdb)
 
 
 
