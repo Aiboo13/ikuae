@@ -2,6 +2,71 @@
 # ERD
 [<img src="https://github.com/user-attachments/assets/dbd60f79-596a-47e9-bb00-e9c6c37e1785" width="500" />](https://github.com/user-attachments/assets/dbd60f79-596a-47e9-bb00-e9c6c37e1785)
 # Flowchart
-[![](https://mermaid.ink/img/pako:eNqVVWtv4kYU_SsjS1vtSgExNm-pXQ2PNAhIUsAfWocPEzyYWcwY2eO0Kcl_752HjWGzassX_Djnzrn3nnt9cjZJyJy-s42TPzc7mkq0Gj0JBL9Pn9DP6oeWK7JYmWvzhnwOlhKg6y-oVvsFDU6PPOY79MhSKt4NZKDevK3oIX9DPg6WeUgBkItXisg-F1_XVdgjk3lEszdEcDBLIi7QiGa754SmIbLvAH-lisz8BVIHVJX5WAccsDg_wMFusOSRQP4R1dCCRTyTKc24VoAGNM3XFywtElieFbFniBxjvgdKAXR1wr5nbz1z2wyGNOVoSg80RQOWhjSj6Z4KdMtjyVJEJc3RktF0sysCNQ2zFUAGRx4r8Ihuoag2yoqlGQs5LfAtg28HOuM5g3pTiUZMUh4bSh_d0TSiN-gW9MZc0gwuE5kUEdomQicwzTLHhHDuigmZKwErKqKIxhBdQPr0WDA7htkN7rjMRYTGmeQHVccBp9DPa3jXwHsnLXUJ_fuWoxBAcERJ1Vq_WrP4PV3_36nySsMKnDMJzoT-H57hFHBWHyokIL95bUDFnovoBv22mCzXFzFWPKR7CNMsOtswajA-kSPdgwlVENMRxS4lYFzR4FbaAj7ZXAqBqkG37xLJ4vUluzgdg4Wo-JZLFaBCfOH0LL_kWlPhZlCBgo12qpElyitQxQNrIVz10ES8JHxTFVvyrYNwG2bicNR-k1QBWQYV0W5fwoCwQ8mwjsGdygF3AEnS1wpPG6nkWK_gbjAWoR7P8pXxxfxzAIbJkS-Bt_7y8Vg_jlf-r2R5sXN0hRFxT4U9RG57R3QB33C9ouphu425YLBSvGAijrk06VYEWZZbR9NEbHmqbTncsc2-NhFqFTW-n80Fy1j6YlaI5NvLSN4HkR5yqUJ1vg9l5_hidGygZh3N6DHRLshjlQ7EcL2A7DOW6cSv31_yW8BPogRyriHVhfN6dTtB5UF1p9ZqNaj6fLwk9-QePdzezib3Y_XURjbuI7Dp2B5NmbTr6ar_xHiSVC15XjTlYirQxpKkDb6P9e4RkN3hvJ4KnDEi6VTnYwhfCDPG1wNFjAdJ97_MBTGuJL2LqbieBdKz5msHUxUh5gqiO_GDWk4f7m8nizlZTtDwbjyc1ib3lWrarUQwtstOu-EVaoDMl1KpOCeErfdhL33g1RLlWpQX-MeQSshBUplntgM1NOK7XPAS7hU5_Zv0B39V1W7LCyN-rZ2oUpfGLw-yJca94KP5KGFFjRs_kH_1SQTgDxKYkceHBbh44M-0m8_a3SLnZmD6iw5MlCYJVev1bpf0mcXFkNkZQ8-VD_uzeoZ-AiCUFJWKrP3dFoyJpHv74TfGstFKbOv_WopM7yYLREZzsNII0pqP733kr8icVDO0s-IW96Zbc-fGiVIeOn2Z5uzGOTDogrp1Tgr45MgdrM4npw-XIdvSPJZPzpN4Bxpo_yNJDgUzTfJo5_S3NM7gLtedGnEapfQMYSJk6TDJhXT6Hu7oGE7_5Pzl9N22V2_1Gt1WE3fcDm64zRvn1enXcLtZb3fhjdtrdODffb9x_tbH4rqHG81Oq9XD7V6r0Wp77_8A5gk3eQ?type=png)](https://mermaid.live/edit#pako:eNqVVWtv4kYU_SsjS1vtSgExNm-pXQ2PNAhIUsAfWocPEzyYWcwY2eO0Kcl_752HjWGzassX_Djnzrn3nnt9cjZJyJy-s42TPzc7mkq0Gj0JBL9Pn9DP6oeWK7JYmWvzhnwOlhKg6y-oVvsFDU6PPOY79MhSKt4NZKDevK3oIX9DPg6WeUgBkItXisg-F1_XVdgjk3lEszdEcDBLIi7QiGa754SmIbLvAH-lisz8BVIHVJX5WAccsDg_wMFusOSRQP4R1dCCRTyTKc24VoAGNM3XFywtElieFbFniBxjvgdKAXR1wr5nbz1z2wyGNOVoSg80RQOWhjSj6Z4KdMtjyVJEJc3RktF0sysCNQ2zFUAGRx4r8Ihuoag2yoqlGQs5LfAtg28HOuM5g3pTiUZMUh4bSh_d0TSiN-gW9MZc0gwuE5kUEdomQicwzTLHhHDuigmZKwErKqKIxhBdQPr0WDA7htkN7rjMRYTGmeQHVccBp9DPa3jXwHsnLXUJ_fuWoxBAcERJ1Vq_WrP4PV3_36nySsMKnDMJzoT-H57hFHBWHyokIL95bUDFnovoBv22mCzXFzFWPKR7CNMsOtswajA-kSPdgwlVENMRxS4lYFzR4FbaAj7ZXAqBqkG37xLJ4vUluzgdg4Wo-JZLFaBCfOH0LL_kWlPhZlCBgo12qpElyitQxQNrIVz10ES8JHxTFVvyrYNwG2bicNR-k1QBWQYV0W5fwoCwQ8mwjsGdygF3AEnS1wpPG6nkWK_gbjAWoR7P8pXxxfxzAIbJkS-Bt_7y8Vg_jlf-r2R5sXN0hRFxT4U9RG57R3QB33C9ouphu425YLBSvGAijrk06VYEWZZbR9NEbHmqbTncsc2-NhFqFTW-n80Fy1j6YlaI5NvLSN4HkR5yqUJ1vg9l5_hidGygZh3N6DHRLshjlQ7EcL2A7DOW6cSv31_yW8BPogRyriHVhfN6dTtB5UF1p9ZqNaj6fLwk9-QePdzezib3Y_XURjbuI7Dp2B5NmbTr6ar_xHiSVC15XjTlYirQxpKkDb6P9e4RkN3hvJ4KnDEi6VTnYwhfCDPG1wNFjAdJ97_MBTGuJL2LqbieBdKz5msHUxUh5gqiO_GDWk4f7m8nizlZTtDwbjyc1ib3lWrarUQwtstOu-EVaoDMl1KpOCeErfdhL33g1RLlWpQX-MeQSshBUplntgM1NOK7XPAS7hU5_Zv0B39V1W7LCyN-rZ2oUpfGLw-yJca94KP5KGFFjRs_kH_1SQTgDxKYkceHBbh44M-0m8_a3SLnZmD6iw5MlCYJVev1bpf0mcXFkNkZQ8-VD_uzeoZ-AiCUFJWKrP3dFoyJpHv74TfGstFKbOv_WopM7yYLREZzsNII0pqP733kr8icVDO0s-IW96Zbc-fGiVIeOn2Z5uzGOTDogrp1Tgr45MgdrM4npw-XIdvSPJZPzpN4Bxpo_yNJDgUzTfJo5_S3NM7gLtedGnEapfQMYSJk6TDJhXT6Hu7oGE7_5Pzl9N22V2_1Gt1WE3fcDm64zRvn1enXcLtZb3fhjdtrdODffb9x_tbH4rqHG81Oq9XD7V6r0Wp77_8A5gk3eQ)
+flowchart TD
+    %% ===== START =====
+    A([Start]) --> B{Pilih Peran}
+    B -->|Tamu| U1[Sudah Punya Akun?]
+    B -->|Petugas| A1[Login Dashboard Petugas]
+
+    %% ===== ALUR Tamu =====
+    U1 -->|Belum| U2[Sign Up - Registrasi Akun Baru]
+    U1 -->|Sudah| U3[Login ke Aplikasi]
+    U2 --> U3
+    U3 --> U4[Cari Kamar Berdasarkan Filter atau Search]
+    U4 --> U5[Tampilkan Daftar Kamar Tersedia]
+    U5 --> U6[Tamu Melihat Detail Kamar: Harga, Fasilitas, Foto]
+    U6 --> U7[Pilih Kamar dan Tentukan Tanggal Menginap]
+    U7 --> U8[Hitung Estimasi Biaya Menginap]
+    U8 --> U9{Tamu Setuju dengan Estimasi Harga?}
+    U9 -->|Ya| U10[Pilih Metode Pembayaran: Dana, M-Banking, QRIS]
+    U9 -->|Tidak| U4
+    U10 --> U11{Apakah Dana atau QRIS?}
+    U11 -->|Ya| U12[Tampilkan Barcode Pembayaran dari Hotel]
+    U11 -->|Tidak| U13[Lanjutkan Pembayaran via M-Banking]
+    U12 --> U14[Pembayaran Berhasil]
+    U13 --> U14
+    U14 --> U15[Tampilkan Invoice Pembayaran]
+    U15 --> U16[Simpan Data Pemesanan ke Sistem]
+    U16 --> U17[Tampilkan History Pemesanan Kamar]
+    U17 --> U18[End Tamu]
+    U18 --> M([Menu Utama])
+
+    %% ===== ALUR PETUGAS =====
+    A1 --> A2{Pilih Menu}
+    A2 -->|1. Pemesanan Offline| A3[Input Data Tamu]
+    A2 -->|2. Konfirmasi Check-In| A10[Tampilkan Daftar Reservasi Aktif]
+    A2 -->|3. Konfirmasi Check-Out| A17[Tampilkan Daftar Tamu Menginap]
+    A2 -->|4. Laporan Bulanan| A23[Akses Menu Laporan Bulanan]
+    A2 -->|5. Logout - End Petugas| A27[End Petugas]
+
+    %% --- PEMESANAN OFFLINE ---
+    A3 --> A4[Cek Ketersediaan Kamar]
+    A4 --> A5[Tampilkan Kamar dan Fasilitas]
+    A5 --> A6[Pelanggan Memilih Kamar]
+    A6 --> A7[Pembayaran Cash atau M-Banking]
+    A7 --> A8[Tampilkan Invoice Pembayaran]
+    A8 --> A9[Simpan Data ke Sistem]
+    A9 --> A26[Kembali ke Menu Petugas]
+
+    %% --- KONFIRMASI CHECK-IN ---
+    A10 --> A11[Pilih Tamu yang Sudah Datang]
+    A11 --> A12[Konfirmasi Check-In]
+    A12 --> A13[Update Status Kamar - Dihuni]
+    A13 --> A26
+
+    %% --- KONFIRMASI CHECK-OUT ---
+    A17 --> A18[Pilih Tamu yang Akan Check-Out]
+    A18 --> A19[Konfirmasi Check-Out]
+    A19 --> A20[Update Status Kamar - Tersedia]
+    A20 --> A26
+
+    %% --- LAPORAN BULANAN ---
+    A23 --> A24[Sistem menampilkan data dari tabel LaporanBulanan berdasarkan bulan & tahun ]
+    A24 --> A25[Cetak atau Simpan Laporan]
+    A25 --> A26[Kembali ke Menu Petugas]
+
+    %% --- AKHIR ADMIN DAN MENU UTAMA ---
+    A26 --> A2
+    A27 --> M
 
 
