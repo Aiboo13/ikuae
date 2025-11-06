@@ -70,7 +70,8 @@ flowchart TD
     A27 --> M
 ```
 # ERD
-[<img src="https://github.com/user-attachments/assets/dbd60f79-596a-47e9-bb00-e9c6c37e1785" width="500" />](https://github.com/user-attachments/assets/dbd60f79-596a-47e9-bb00-e9c6c37e1785)
+[![ERD Diagram](https://github.com/user-attachments/assets/dbd60f79-596a-47e9-bb00-e9c6c37e1785)](https://github.com/user-attachments/assets/dbd60f79-596a-47e9-bb00-e9c6c37e1785)
+
 # CDM
 <img width="1066" height="477" alt="Image" src="https://github.com/user-attachments/assets/251fb45a-9b03-4852-9e00-e478bc499fe4" />
 
