@@ -9426,7 +9426,7 @@ const Q = Em(y),
       }
       if (!localStorage.getItem("hotelInfo")) {
         const r = {
-          nama_hotel: "ikiAE",
+          nama_hotel: "ikuAE",
           alamat: "Jl. Paradise No. 123, Malang, Jawa Timur",
           telepon: "+62 812 3456 7890",
           email: "info@hotelparadise.com",
@@ -11404,7 +11404,7 @@ const fy = ({ currentPage: r, onNavigate: a, user: s, onLogout: l }) => {
                   c.jsx("span", {
                     className:
                       "text-lg md:text-xl bg-gradient-to-r from-violet-600 to-purple-600 dark:from-violet-400 dark:to-purple-400 bg-clip-text text-transparent",
-                    children: "ikiAE",
+                    children: "ikuAE",
                   }),
                   c.jsx("p", {
                     className: "text-xs text-gray-500 dark:text-gray-400",
@@ -11740,7 +11740,7 @@ const vy = ({ onNavigate: r, user: a }) => {
                       "text-base md:text-xl mb-6 md:mb-8 text-violet-100",
                     children: [
                       m?.deskripsi ||
-                        "Nikmati kenyamanan dan kemewahan di ikiAE.",
+                        "Nikmati kenyamanan dan kemewahan di ikuAE.",
                       " ",
                       v.totalKamar,
                       " kamar mewah dengan fasilitas terbaik menanti Anda. Mulai dari",
@@ -12046,7 +12046,7 @@ const vy = ({ onNavigate: r, user: a }) => {
                       className: "text-xl mb-4 flex items-center gap-2",
                       children: [
                         c.jsx(gc, { className: "w-6 h-6" }),
-                        m?.nama_hotel || "ikiAE",
+                        m?.nama_hotel || "ikuAE",
                       ],
                     }),
                     c.jsxs("p", {
@@ -12159,7 +12159,7 @@ const vy = ({ onNavigate: r, user: a }) => {
                   "© ",
                   new Date().getFullYear(),
                   " ",
-                  m?.nama_hotel || "ikiAE",
+                  m?.nama_hotel || "ikuAE",
                   ". All rights reserved.",
                 ],
               }),

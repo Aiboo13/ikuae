@@ -33,7 +33,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
             <div className="hidden sm:block">
               <span className="text-lg md:text-xl bg-gradient-to-r from-violet-600 to-purple-600 dark:from-violet-400 dark:to-purple-400 bg-clip-text text-transparent">
-                ikiAE
+                ikuAE
               </span>
               <p className="text-xs text-gray-500 dark:text-gray-400">
                 Luxury & Comfort

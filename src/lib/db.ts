@@ -302,7 +302,7 @@ export const initializeData = () => {
   // Hotel Info
   if (!localStorage.getItem("hotelInfo")) {
     const hotelInfoData: HotelInfo = {
-      nama_hotel: "ikiAE",
+      nama_hotel: "ikuAE",
       alamat: "Jl. Paradise No. 123, Malang, Jawa Timur",
       telepon: "+62 812 3456 7890",
       email: "info@hotelparadise.com",

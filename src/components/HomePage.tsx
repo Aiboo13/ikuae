@@ -163,7 +163,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, user }) => {
             </h1>
             <p className="text-base md:text-xl mb-6 md:mb-8 text-violet-100">
               {hotelInfo?.deskripsi ||
-                "Nikmati kenyamanan dan kemewahan di ikiAE."}{" "}
+                "Nikmati kenyamanan dan kemewahan di ikuAE."}{" "}
               {stats.totalKamar} kamar mewah dengan fasilitas terbaik menanti
               Anda. Mulai dari{" "}
               {formatRupiah(
@@ -354,7 +354,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, user }) => {
             <div>
               <h3 className="text-xl mb-4 flex items-center gap-2">
                 <Hotel className="w-6 h-6" />
-                {hotelInfo?.nama_hotel || "ikiAE"}
+                {hotelInfo?.nama_hotel || "ikuAE"}
               </h3>
               <p className="text-gray-400 mb-4">
                 {hotelInfo?.deskripsi ||
@@ -407,7 +407,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, user }) => {
           <div className="border-t border-gray-700 mt-12 pt-8 text-center text-gray-400">
             <p>
               &copy; {new Date().getFullYear()}{" "}
-              {hotelInfo?.nama_hotel || "ikiAE"}. All rights reserved.
+              {hotelInfo?.nama_hotel || "ikuAE"}. All rights reserved.
             </p>
           </div>
         </div>
