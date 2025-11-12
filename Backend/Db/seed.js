@@ -1,6 +1,26 @@
 const fs = require("fs");
+require("dotenv").config();
 const path = require("path");
 const oracledb = require("oracledb");
+
+// sanitize env helper
+function sanitizeEnv(key) {
+    if (!process.env[key]) return undefined;
+    let v = process.env[key].trim();
+    // hapus surrounding quotes jika ada
+    v = v.replace(/^"(.*)"$/,'$1').replace(/^'(.*)'$/,'$1');
+    return v;
+}
+
+const DB_USER = sanitizeEnv("DB_USER");
+const DB_PASS = sanitizeEnv("DB_PASS");
+const DB_CONNECT = sanitizeEnv("DB_CONNECT");
+const ORACLE_LIB_DIR = sanitizeEnv("ORACLE_LIB_DIR");
+
+// debug singkat (jangan tampilkan password penuh)
+console.log("DB_USER:", DB_USER);
+console.log("DB_CONNECT:", DB_CONNECT);
+console.log("DB_PASS: (length)", DB_PASS ? DB_PASS.length : 0);
 
 async function seedFromSqlFile() {
     let connection;
@@ -8,7 +28,7 @@ async function seedFromSqlFile() {
         // Inisialisasi Oracle Client (sesuaikan libDir jika perlu)
         try {
             oracledb.initOracleClient({
-                libDir: "C:\\oracle\\instantclient_21_13\\instantclient_23_9",
+                libDir: ORACLE_LIB_DIR ,
             });
         } catch (e) {
             // jika sudah di-initialize, abaikan
@@ -17,11 +37,29 @@ async function seedFromSqlFile() {
             }
         }
 
-        connection = await oracledb.getConnection({
-            user: "hotel",
-            password: "hotel",
-            connectString: "localhost:1521/orcl",
-        });
+        // coba koneksi dengan fallback jika ORA-01017
+        async function tryConnect(u, p, c) {
+            return await oracledb.getConnection({ user: u, password: p, connectString: c });
+        }
+
+        try {
+            connection = await tryConnect(DB_USER, DB_PASS, DB_CONNECT);
+        } catch (errConn) {
+            console.error("Koneksi pertama gagal:", errConn && errConn.errorNum ? `ORA-${errConn.errorNum}` : "", errConn.message);
+            // jika invalid credential, coba lagi dengan username uppercase (sering diperlukan kalau .env lowercase)
+            if (errConn && errConn.errorNum === 1017 && DB_USER) {
+                try {
+                    const altUser = DB_USER.toUpperCase();
+                    console.log("Mencoba ulang koneksi dengan username uppercase:", altUser);
+                    connection = await tryConnect(altUser, DB_PASS, DB_CONNECT);
+                } catch (err2) {
+                    console.error("Fallback koneksi gagal:", err2 && err2.errorNum ? `ORA-${err2.errorNum}` : "", err2.message);
+                    throw err2;
+                }
+            } else {
+                throw errConn;
+            }
+        }
 
         console.log("Terhubung ke database Oracle.");
 

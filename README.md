@@ -96,4 +96,4 @@ flowchart TD
 
 ## cara menjalankan server 
 
-[running.md](running.md)
+[running.md](./Backend/running.md)
