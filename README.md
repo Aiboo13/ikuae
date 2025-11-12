@@ -93,3 +93,7 @@ flowchart TD
 3.  npm install oracledb express
 4. node index.js
 5. kalau gagal cek seed.js di folder be, sesuikan config 
+
+## cara menjalankan server 
+
+[running.md](running.md)
