@@ -59,8 +59,12 @@ export const ReservasiPage: React.FC<ReservasiPageProps> = ({
   const [jumlahHari, setJumlahHari] = useState(0);
 
   useEffect(() => {
-    const kamarData = getData<Kamar>("kamar");
-    setKamarList(kamarData.filter((k) => k.status === "Tersedia"));
+    const load = async () => {
+      const kamarData = await getData<Kamar>("kamar");
+      setKamarList(kamarData.filter((k) => k.status === "Tersedia"));
+    };
+
+    load();
   }, []);
 
   useEffect(() => {

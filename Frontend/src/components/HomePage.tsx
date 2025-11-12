@@ -1,39 +1,11 @@
 import React, { useEffect, useState } from "react";
-import {
-  getData,
-  Kamar,
-  Fasilitas,
-  Reservasi,
-  Tamu,
-  HotelInfo,
-  getHotelInfo,
-  formatRupiah,
-  resetAllData,
-} from "../lib/db";
+import {getData,Kamar,Fasilitas,Reservasi,Tamu,HotelInfo,getHotelInfo,formatRupiah,resetAllData,} from "../lib/db";
 import { UserWithRole } from "../lib/types";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
+import {Card,CardContent,CardFooter,CardHeader,CardTitle,} from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
-import {
-  Wifi,
-  Tv,
-  Wind,
-  Check,
-  Star,
-  Users,
-  MapPin,
-  Phone,
-  Mail,
-  Award,
-  Hotel,
-} from "lucide-react";
+import {Wifi,Tv,Wind,Check,Star,Users,MapPin,Phone,Mail,Award,Hotel,} from "lucide-react";
 
 interface HomePageProps {
   onNavigate: (page: string) => void;
@@ -54,24 +26,25 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, user }) => {
   });
 
   useEffect(() => {
+    const load = async () => {
     // Temporary: Clear localStorage untuk memastikan data fresh
     // localStorage.clear();
 
-    const kamarData = getData<Kamar>("kamar");
-    const fasilitasData = getData<Fasilitas>("fasilitas");
-    const reservasiData = getData<Reservasi>("reservasi");
-    const tamuData = getData<Tamu>("tamu");
-    const hotelData = getHotelInfo();
+      const kamarData = await getData<Kamar>("kamar");
+      const fasilitasData = await getData<Fasilitas>("fasilitas");
+      const reservasiData = await getData<Reservasi>("reservasi");
+      const tamuData = await getData<Tamu>("tamu");
+      const hotelData = getHotelInfo();
 
     console.log("Debug - Jumlah kamar yang dimuat:", kamarData.length);
     console.log("Debug - Data kamar:", kamarData);
 
     // Jika kamar kurang dari 10, reset data
-    if (kamarData.length < 10) {
+      if (kamarData.length < 10) {
       console.log("Debug - Kamar kurang dari 10, melakukan reset data...");
       resetAllData();
       // Reload data setelah reset
-      const newKamarData = getData<Kamar>("kamar");
+      const newKamarData = await getData<Kamar>("kamar");
       console.log("Debug - Setelah reset, jumlah kamar:", newKamarData.length);
       setKamarList(newKamarData);
     } else {
@@ -82,31 +55,32 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, user }) => {
     setHotelInfo(hotelData);
 
     // Hitung statistik dari database
-    const kamarTersedia = kamarData.filter(
-      (k) => k.status === "Tersedia"
-    ).length;
-    const totalKamar = kamarData.length;
-    const kamarTerisi = kamarData.filter((k) => k.status === "Terisi").length;
+      const kamarTersedia = kamarData.filter((k) => k.status === "Tersedia").length;
+      const totalKamar = kamarData.length;
+      const kamarTerisi = kamarData.filter((k) => k.status === "Terisi").length;
     const okupansiRate =
       totalKamar > 0 ? Math.round((kamarTerisi / totalKamar) * 100) : 0;
 
     // Hitung rata-rata harga kamar
-    const rataRataHarga =
-      kamarData.length > 0
-        ? Math.round(
-            kamarData.reduce((sum, kamar) => sum + kamar.harga_per_malam, 0) /
-              kamarData.length
-          )
-        : 0;
+      const rataRataHarga =
+        kamarData.length > 0
+          ? Math.round(
+              kamarData.reduce((sum, kamar) => sum + kamar.harga_per_malam, 0) /
+                kamarData.length
+            )
+          : 0;
 
-    setStats({
-      totalTamu: tamuData.length,
-      kamarTersedia,
-      totalKamar,
-      okupansiRate,
-      totalReservasi: reservasiData.length,
-      rataRataHarga,
-    });
+      setStats({
+        totalTamu: tamuData.length,
+        kamarTersedia,
+        totalKamar,
+        okupansiRate,
+        totalReservasi: reservasiData.length,
+        rataRataHarga,
+      });
+    };
+
+    load();
   }, []);
 
   const getFasilitasForKamar = (idKamar: number) => {
@@ -122,7 +96,8 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, user }) => {
   };
 
   const getKapasitasTamu = (tipeKamar: string) => {
-    switch (tipeKamar.toLowerCase()) {
+    const t = tipeKamar?.toLowerCase() || "";
+    switch (t) {
       case "standard":
         return "2 Tamu";
       case "deluxe":

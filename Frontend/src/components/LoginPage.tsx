@@ -29,9 +29,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({
   const [petugasName, setPetugasName] = useState("");
   const [petugasPassword, setPetugasPassword] = useState("");
 
-  const handleTamuLogin = (e: React.FormEvent) => {
+  const handleTamuLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const tamuList = getData<Tamu>("tamu");
+    const tamuList = await getData<Tamu>("tamu");
     const tamu = tamuList.find(
       (t) => t.email === tamuEmail && t.password === tamuPassword
     );
@@ -51,9 +51,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({
     }
   };
 
-  const handlePetugasLogin = (e: React.FormEvent) => {
+  const handlePetugasLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const petugasList = getData<Petugas>("petugas");
+    const petugasList = await getData<Petugas>("petugas");
     const petugas = petugasList.find(
       (p) => p.nama_petugas === petugasName && p.password === petugasPassword
     );
