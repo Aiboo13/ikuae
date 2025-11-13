@@ -5,9 +5,10 @@ const app = express();
 const port = process.env.PORT;
 const cors = require("cors");
 
-app.use(cors());
+app.use(cors()); // harus sebelum routes
 app.use(express.json());
 const tamuRouter = require("./routers/tamu");
+const tamuApiRouter = require("./api/tamuapi"); // tambahkan ini
 const fasilitasRouter =  require ("./routers/fasilitas");
 const kamarRouter = require("./routers/kamar");
 const laporanbulananRouter = require("./routers/laporanbulanan");
@@ -22,6 +23,7 @@ app.use("/api", laporanbulananRouter);
 app.use("/api", kamarRouter);
 app.use("/api", fasilitasRouter);
 app.use("/api", tamuRouter);
+app.use("/api", tamuApiRouter); // tambahkan ini
 
 // jalankan seeder Oracle
 // require("./Db/seed");

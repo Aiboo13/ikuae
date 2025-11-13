@@ -8,6 +8,7 @@ import { LoginPage } from "./components/LoginPage";
 import { ReservasiPage } from "./components/ReservasiPage";
 import { AdminPage } from "./components/AdminPage";
 import { Toaster } from "./components/ui/sonner";
+import { Registrasi } from "./components/Registrasi";
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState("home");
@@ -39,6 +40,31 @@ export default function App() {
     setCurrentPage(page);
   };
 
+  const renderPage = () => {
+    switch (currentPage) {
+      case "home":
+        return <HomePage onNavigate={handleNavigate} user={user} />;
+      case "login":
+        return <LoginPage onLogin={handleLogin} onNavigate={handleNavigate} />;
+      case "registrasi":
+        return <Registrasi onNavigate={handleNavigate} />;
+      case "reservasi":
+        return user ? (
+          <ReservasiPage onNavigate={handleNavigate} user={user} />
+        ) : (
+          <HomePage onNavigate={handleNavigate} user={user} />
+        );
+      case "admin":
+        return user?.role === "petugas" ? (
+          <AdminPage onNavigate={handleNavigate} user={user} onLogout={handleLogout} />
+        ) : (
+          <HomePage onNavigate={handleNavigate} user={user} />
+        );
+      default:
+        return <HomePage onNavigate={handleNavigate} user={user} />;
+    }
+  };
+
   return (
     <ThemeProvider>
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
@@ -49,21 +75,7 @@ export default function App() {
           onLogout={handleLogout}
         />
 
-        {currentPage === "home" && (
-          <HomePage onNavigate={handleNavigate} user={user} />
-        )}
-
-        {currentPage === "login" && (
-          <LoginPage onLogin={handleLogin} onNavigate={handleNavigate} />
-        )}
-
-        {currentPage === "reservasi" && (
-          <ReservasiPage user={user} onNavigate={handleNavigate} />
-        )}
-
-        {currentPage === "admin" && (
-          <AdminPage user={user} onNavigate={handleNavigate} />
-        )}
+        {renderPage()}
 
         <Toaster />
       </div>

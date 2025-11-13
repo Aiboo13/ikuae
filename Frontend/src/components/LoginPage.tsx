@@ -248,6 +248,15 @@ export const LoginPage: React.FC<LoginPageProps> = ({
               Kembali ke Home
             </Button>
           </div>
+          <div className="mt-6 text-center">
+            <Button
+              variant="ghost"
+              onClick={() => onNavigate("registrasi")}
+              className="text-violet-600 dark:text-violet-400 hover:text-violet-700 dark:hover:text-violet-300 hover:bg-violet-50 dark:hover:bg-violet-900/30"
+            >
+              Registrasi
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </div>

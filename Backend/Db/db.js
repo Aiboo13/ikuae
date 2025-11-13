@@ -1,12 +1,6 @@
 const oracledb = require("oracledb");
 require("dotenv").config();
 
-function env(key) {
-  const v = process.env[key];
-  return v ? v.trim().replace(/^"(.*)"$/,'$1').replace(/^'(.*)'$/,'$1') : undefined;
-}
-
-// Inisialisasi Oracle Client (thick) jika ORACLE_LIB_DIR diset
 try {
   const libDir = env("ORACLE_LIB_DIR");
   if (libDir) {
@@ -29,4 +23,4 @@ async function getConnection() {
   });
 }
 
-module.exports = { getConnection };
+module.exports = getConnection; // export function langsung (bukan object)
