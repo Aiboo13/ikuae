@@ -2,8 +2,7 @@
 /node_modules
 
 # Python
-/venv
-/.env
+
 
 # Java/Maven/Gradle
 /target

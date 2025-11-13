@@ -1,0 +1,4 @@
+- trigger checker reservasi
+- trigger current time booking (melihat mana saja kamar yang ready sama tidak)
+- fitur refund
+- fitur registrasi
