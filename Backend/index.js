@@ -23,12 +23,14 @@ app.use("/api", laporanbulananRouter);
 app.use("/api", kamarRouter);
 app.use("/api", fasilitasRouter);
 app.use("/api", tamuRouter);
-app.use("/api", tamuApiRouter); // tambahkan ini
+app.use("/api", tamuApiRouter);
+
+// endpoint root
 
 // jalankan seeder Oracle
 // require("./Db/seed");
 
-app.get("/", (req, res) => {
+app.get("/", (res) => {
   res.send("Server hotel aktif dan database sudah di-seed.");
 });
 

@@ -92,8 +92,8 @@ flowchart TD
 2. npm init -y
 3.  npm install oracledb express
 4. node index.js
-5. kalau gagal cek seed.js di folder be, sesuikan config 
-
+5. npm install dotenv
+6. node index.js
 ## cara menjalankan server 
 
 [running.md](./Backend/running.md)

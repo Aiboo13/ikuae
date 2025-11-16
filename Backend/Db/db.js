@@ -2,7 +2,7 @@ const oracledb = require("oracledb");
 require("dotenv").config();
 
 try {
-  const libDir = env("ORACLE_LIB_DIR");
+  const libDir = process.env.ORACLE_LIB_DIR;
   if (libDir) {
     oracledb.initOracleClient({ libDir });
     console.log("Oracle Client initialized from", libDir);
@@ -17,10 +17,10 @@ try {
 
 async function getConnection() {
   return await oracledb.getConnection({
-    user: env("DB_USER"),
-    password: env("DB_PASS"),
-    connectString: env("DB_CONNECT"),
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    connectString: process.env.DB_CONNECT_STRING,
   });
 }
 
-module.exports = getConnection; // export function langsung (bukan object)
+module.exports = {getConnection}; // export function langsung (bukan object)
