@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const oracledb = require('oracledb');
-const getConnection = require('../Db/db'); // HAPUS kurung kurawal { }
+const  {getConnection } = require('../Db/db'); 
 
 router.post('/tamu', async (req, res) => {
   let connection;

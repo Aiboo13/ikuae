@@ -8,7 +8,8 @@ const cors = require("cors");
 app.use(cors()); // harus sebelum routes
 app.use(express.json());
 const tamuRouter = require("./routers/tamu");
-const tamuApiRouter = require("./api/tamuapi"); // tambahkan ini
+const tamuApiRouter = require("./api/tamuapi");
+const reservasiApiRouter = require("./api/reservasiapi");
 const fasilitasRouter =  require ("./routers/fasilitas");
 const kamarRouter = require("./routers/kamar");
 const laporanbulananRouter = require("./routers/laporanbulanan");
@@ -17,6 +18,7 @@ const petugasRouter = require("./routers/petugas");
 const reservasiRouter = require("./routers/reservasi");
 
 app.use("/api", reservasiRouter);
+app.use("/api", reservasiApiRouter);
 app.use("/api", petugasRouter);
 app.use("/api", pembayaranRouter);
 app.use("/api", laporanbulananRouter);

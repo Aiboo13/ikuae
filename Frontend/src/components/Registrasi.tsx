@@ -1,5 +1,15 @@
 import React, { useState } from "react";
-import { UserPlus, Mail, Lock, User, Phone, MapPin, Eye, EyeOff, ArrowLeft } from "lucide-react";
+import { UserPlus, Mail, Lock, User, Phone, MapPin, Eye, EyeOff, Sparkles } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { Button } from "./ui/button";
 
 interface RegistrasiProps {
   onNavigate: (page: string) => void;
@@ -147,234 +157,241 @@ export const Registrasi: React.FC<RegistrasiProps> = ({ onNavigate, onRegisterSu
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-purple-900 dark:to-gray-900 flex items-center justify-center p-4">
-      <div className="w-full max-w-2xl">
+    <div className="min-h-screen relative overflow-hidden flex items-center justify-center p-4">
+      {/* Animated background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-violet-500 via-purple-500 to-pink-500 dark:from-violet-900 dark:via-purple-900 dark:to-pink-900">
+        <div className="absolute top-20 left-20 w-96 h-96 bg-white/20 dark:bg-white/10 rounded-full blur-3xl animate-float"></div>
+        <div
+          className="absolute bottom-20 right-20 w-96 h-96 bg-pink-300/30 dark:bg-pink-300/20 rounded-full blur-3xl animate-float"
+          style={{ animationDelay: "2s" }}
+        ></div>
+        <div
+          className="absolute top-1/2 left-1/2 w-96 h-96 bg-violet-300/20 dark:bg-violet-300/10 rounded-full blur-3xl animate-float"
+          style={{ animationDelay: "4s" }}
+        ></div>
+      </div>
+
+      <div className="w-full max-w-md relative z-10">
         {/* Back Button */}
-        <button
+        <Button
+          variant="ghost"
           onClick={() => onNavigate("home")}
-          className="mb-6 flex items-center gap-2 text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 transition-colors"
+          className="mb-4 text-white hover:bg-white/10 hover:text-white"
         >
-          <ArrowLeft className="w-5 h-5" />
-          <span>Kembali ke Beranda</span>
-        </button>
+          ← Kembali
+        </Button>
 
-        {/* Registration Card */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8 md:p-10">
-          {/* Header */}
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full mb-4">
-              <UserPlus className="w-8 h-8 text-white" />
+        <Card className="shadow-2xl border-0 dark:bg-gray-900/95 backdrop-blur-xl animate-slide-in-up">
+          <CardHeader className="text-center pb-4">
+            <div className="flex justify-center mb-4">
+              <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-gradient-to-r from-violet-600 to-purple-600 flex items-center justify-center relative">
+                <UserPlus className="w-7 h-7 md:w-8 md:h-8 text-white" />
+                <Sparkles className="w-4 h-4 md:w-5 md:h-5 text-amber-300 absolute -top-1 -right-1 animate-pulse" />
+              </div>
             </div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            <CardTitle className="text-2xl md:text-3xl bg-gradient-to-r from-violet-600 to-purple-600 dark:from-violet-400 dark:to-purple-400 bg-clip-text text-transparent">
               Buat Akun Baru
-            </h1>
-            <p className="text-gray-600 dark:text-gray-400">
+            </CardTitle>
+            <CardDescription className="text-sm md:text-base dark:text-gray-400">
               Daftar untuk mulai reservasi kamar hotel
-            </p>
-          </div>
+            </CardDescription>
+          </CardHeader>
 
-          {/* Success Message */}
-          {successMessage && (
-            <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
-              <p className="text-green-800 dark:text-green-200 text-center">
-                {successMessage}
-              </p>
-            </div>
-          )}
+          <CardContent className="space-y-4">
+            {/* Success Message */}
+            {successMessage && (
+              <div className="p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+                <p className="text-green-800 dark:text-green-200 text-center text-sm">
+                  {successMessage}
+                </p>
+              </div>
+            )}
 
-          {/* Error Message */}
-          {errors.submit && (
-            <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-              <p className="text-red-800 dark:text-red-200 text-center">
-                {errors.submit}
-              </p>
-            </div>
-          )}
+            {/* Error Message */}
+            {errors.submit && (
+              <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                <p className="text-red-800 dark:text-red-200 text-center text-sm">
+                  {errors.submit}
+                </p>
+              </div>
+            )}
 
-          {/* Registration Form */}
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Nama Lengkap */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Nama Lengkap *
-              </label>
-              <div className="relative">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type="text"
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Nama Lengkap */}
+              <div className="space-y-2">
+                <Label htmlFor="nama_tamu" className="flex items-center gap-2">
+                  <User className="w-4 h-4" />
+                  Nama Lengkap *
+                </Label>
+                <Input
+                  id="nama_tamu"
                   name="nama_tamu"
+                  type="text"
                   value={formData.nama_tamu}
                   onChange={handleChange}
                   placeholder="Masukkan nama lengkap"
-                  className={`w-full pl-11 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white ${
-                    errors.nama_tamu ? "border-red-500" : "border-gray-300"
-                  }`}
+                  className={errors.nama_tamu ? "border-red-500" : ""}
                 />
+                {errors.nama_tamu && (
+                  <p className="text-sm text-red-600 dark:text-red-400">{errors.nama_tamu}</p>
+                )}
               </div>
-              {errors.nama_tamu && (
-                <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.nama_tamu}</p>
-              )}
-            </div>
 
-            {/* Email */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Email *
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type="email"
+              {/* Email */}
+              <div className="space-y-2">
+                <Label htmlFor="email" className="flex items-center gap-2">
+                  <Mail className="w-4 h-4" />
+                  Email *
+                </Label>
+                <Input
+                  id="email"
                   name="email"
+                  type="email"
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="nama@email.com"
-                  className={`w-full pl-11 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white ${
-                    errors.email ? "border-red-500" : "border-gray-300"
-                  }`}
+                  className={errors.email ? "border-red-500" : ""}
                 />
+                {errors.email && (
+                  <p className="text-sm text-red-600 dark:text-red-400">{errors.email}</p>
+                )}
               </div>
-              {errors.email && (
-                <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.email}</p>
-              )}
-            </div>
 
-            {/* Password */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Password *
-              </label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type={showPassword ? "text" : "password"}
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  placeholder="Minimal 6 karakter"
-                  className={`w-full pl-11 pr-12 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white ${
-                    errors.password ? "border-red-500" : "border-gray-300"
-                  }`}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                </button>
+              {/* Password */}
+              <div className="space-y-2">
+                <Label htmlFor="password" className="flex items-center gap-2">
+                  <Lock className="w-4 h-4" />
+                  Password *
+                </Label>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder="Minimal 6 karakter"
+                    className={errors.password ? "border-red-500 pr-10" : "pr-10"}
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </Button>
+                </div>
+                {errors.password && (
+                  <p className="text-sm text-red-600 dark:text-red-400">{errors.password}</p>
+                )}
               </div>
-              {errors.password && (
-                <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.password}</p>
-              )}
-            </div>
 
-            {/* Confirm Password */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Konfirmasi Password *
-              </label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type={showConfirmPassword ? "text" : "password"}
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  placeholder="Ketik ulang password"
-                  className={`w-full pl-11 pr-12 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white ${
-                    errors.confirmPassword ? "border-red-500" : "border-gray-300"
-                  }`}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                >
-                  {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                </button>
+              {/* Confirm Password */}
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword" className="flex items-center gap-2">
+                  <Lock className="w-4 h-4" />
+                  Konfirmasi Password *
+                </Label>
+                <div className="relative">
+                  <Input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type={showConfirmPassword ? "text" : "password"}
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    placeholder="Ketik ulang password"
+                    className={errors.confirmPassword ? "border-red-500 pr-10" : "pr-10"}
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                  >
+                    {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </Button>
+                </div>
+                {errors.confirmPassword && (
+                  <p className="text-sm text-red-600 dark:text-red-400">{errors.confirmPassword}</p>
+                )}
               </div>
-              {errors.confirmPassword && (
-                <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.confirmPassword}</p>
-              )}
-            </div>
 
-            {/* Nomor HP */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Nomor HP *
-              </label>
-              <div className="relative">
-                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type="tel"
+              {/* Nomor HP */}
+              <div className="space-y-2">
+                <Label htmlFor="no_hp" className="flex items-center gap-2">
+                  <Phone className="w-4 h-4" />
+                  Nomor HP *
+                </Label>
+                <Input
+                  id="no_hp"
                   name="no_hp"
+                  type="tel"
                   value={formData.no_hp}
                   onChange={handleChange}
                   placeholder="08123456789"
-                  className={`w-full pl-11 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white ${
-                    errors.no_hp ? "border-red-500" : "border-gray-300"
-                  }`}
+                  className={errors.no_hp ? "border-red-500" : ""}
                 />
+                {errors.no_hp && (
+                  <p className="text-sm text-red-600 dark:text-red-400">{errors.no_hp}</p>
+                )}
               </div>
-              {errors.no_hp && (
-                <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.no_hp}</p>
-              )}
-            </div>
 
-            {/* Alamat */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Alamat Lengkap *
-              </label>
-              <div className="relative">
-                <MapPin className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
-                <textarea
+              {/* Alamat */}
+              <div className="space-y-2">
+                <Label htmlFor="alamat" className="flex items-center gap-2">
+                  <MapPin className="w-4 h-4" />
+                  Alamat Lengkap *
+                </Label>
+                <Input
+                  id="alamat"
                   name="alamat"
                   value={formData.alamat}
                   onChange={handleChange}
                   placeholder="Masukkan alamat lengkap"
-                  rows={3}
-                  className={`w-full pl-11 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white resize-none ${
-                    errors.alamat ? "border-red-500" : "border-gray-300"
-                  }`}
+                  className={errors.alamat ? "border-red-500" : ""}
                 />
+                {errors.alamat && (
+                  <p className="text-sm text-red-600 dark:text-red-400">{errors.alamat}</p>
+                )}
               </div>
-              {errors.alamat && (
-                <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.alamat}</p>
-              )}
-            </div>
 
-            {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isLoading ? (
-                <span className="flex items-center justify-center gap-2">
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  Mendaftar...
-                </span>
-              ) : (
-                "Daftar Sekarang"
-              )}
-            </button>
-          </form>
-
-          {/* Login Link */}
-          <div className="mt-6 text-center">
-            <p className="text-gray-600 dark:text-gray-400">
-              Sudah punya akun?{" "}
-              <button
-                onClick={() => onNavigate("login")}
-                className="text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-semibold"
+              {/* Submit Button */}
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 mt-2"
+                size="lg"
               >
-                Login di sini
-              </button>
-            </p>
-          </div>
-        </div>
+                {isLoading ? (
+                  <span className="flex items-center gap-2">
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    Mendaftar...
+                  </span>
+                ) : (
+                  "Daftar Sekarang"
+                )}
+              </Button>
+
+              {/* Login Link */}
+              <div className="text-center pt-4">
+                <p className="text-sm text-muted-foreground">
+                  Sudah punya akun?{" "}
+                  <Button
+                    type="button"
+                    variant="link"
+                    onClick={() => onNavigate("login")}
+                    className="p-0 h-auto font-semibold text-violet-600 dark:text-violet-400 hover:text-violet-700 dark:hover:text-violet-300"
+                  >
+                    Login di sini
+                  </Button>
+                </p>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
