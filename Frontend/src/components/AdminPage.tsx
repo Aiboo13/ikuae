@@ -71,12 +71,20 @@ export const AdminPage: React.FC<AdminPageProps> = ({ user, onNavigate }) => {
     );
   }
 
-  const loadData = () => {
-    setReservasiList(getData<Reservasi>("reservasi"));
-    setPembayaranList(getData<Pembayaran>("pembayaran"));
-    setLaporanList(getData<LaporanBulanan>("laporanBulanan"));
-    setKamarList(getData<Kamar>("kamar"));
-    setTamuList(getData<Tamu>("tamu"));
+  const loadData = async () => {
+    const [reservasi, pembayaran, laporan, kamar, tamu] = await Promise.all([
+      getData<Reservasi>("reservasi"),
+      getData<Pembayaran>("pembayaran"),
+      getData<LaporanBulanan>("laporanBulanan"),
+      getData<Kamar>("kamar"),
+      getData<Tamu>("tamu"),
+    ]);
+
+    setReservasiList(reservasi);
+    setPembayaranList(pembayaran);
+    setLaporanList(laporan);
+    setKamarList(kamar);
+    setTamuList(tamu);
   };
 
   useEffect(() => {

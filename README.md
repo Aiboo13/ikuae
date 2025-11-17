@@ -84,3 +84,16 @@ flowchart TD
 
 # PDM
 <img width="1101" height="527" alt="Image" src="https://github.com/user-attachments/assets/6a84c818-1d9d-4f83-8e43-61b7571a17fb" />
+
+
+# cara mengirim db ke db orecle
+
+1. "cd backend-pbl"
+2. npm init -y
+3.  npm install oracledb express
+4. node index.js
+5. npm install dotenv
+6. node index.js
+## cara menjalankan server 
+
+[running.md](./Backend/running.md)

@@ -1,0 +1,11 @@
+# Node
+/node_modules
+
+# Python
+/venv
+/.env
+
+# Java/Maven/Gradle
+/target
+.gradle
+node_modules

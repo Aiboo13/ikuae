@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   getData,
-  addData,
-  updateData,
   Kamar,
-  Reservasi,
-  Pembayaran,
   formatRupiah,
   Tamu,
   Petugas,
@@ -59,8 +55,12 @@ export const ReservasiPage: React.FC<ReservasiPageProps> = ({
   const [jumlahHari, setJumlahHari] = useState(0);
 
   useEffect(() => {
-    const kamarData = getData<Kamar>("kamar");
-    setKamarList(kamarData.filter((k) => k.status === "Tersedia"));
+    const load = async () => {
+      const kamarData = await getData<Kamar>("kamar");
+      setKamarList(kamarData.filter((k) => k.status === "Tersedia"));
+    };
+
+    load();
   }, []);
 
   useEffect(() => {
@@ -79,7 +79,7 @@ export const ReservasiPage: React.FC<ReservasiPageProps> = ({
     }
   }, [selectedKamar, checkIn, checkOut, kamarList]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!user || user.role !== "tamu") {
@@ -92,43 +92,39 @@ export const ReservasiPage: React.FC<ReservasiPageProps> = ({
       return;
     }
 
-    // Buat pembayaran dulu
-    const pembayaran = addData<Pembayaran>("pembayaran", {
-      id_reservasi: 0,
-      metode_pembayaran: metodePembayaran,
-      jumlah_bayar: totalHarga,
-      tanggal_pembayaran: new Date().toISOString(),
-      status_pembayaran: "Lunas",
-    } as any);
+    try {
+      // Kirim data reservasi ke backend API
+      const response = await fetch("http://localhost:3001/api/reservasi", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id_kamar: parseInt(selectedKamar),
+          id_tamu: user.id,
+          tanggal_checkin: new Date(checkIn).toISOString(),
+          tanggal_checkout: new Date(checkOut).toISOString(),
+          total_harga: totalHarga,
+          metode_pembayaran: metodePembayaran,
+        }),
+      });
 
-    // Buat reservasi
-    const reservasi = addData<Reservasi>("reservasi", {
-      id_kamar: parseInt(selectedKamar),
-      id_tamu: user.id,
-      id_petugas: null,
-      id_pembayaran: pembayaran.id_pembayaran,
-      tanggal_pesan: new Date().toISOString(),
-      tanggal_checkin: new Date(checkIn).toISOString(),
-      tanggal_checkout: new Date(checkOut).toISOString(),
-      total_harga: totalHarga,
-      status_reservasi: "Dipesan",
-    } as any);
+      const result = await response.json();
 
-    // Update id_reservasi di pembayaran
-    updateData<Pembayaran>("pembayaran", pembayaran.id_pembayaran, {
-      id_reservasi: reservasi.id_reservasi,
-    });
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Gagal membuat reservasi");
+      }
 
-    // Update status kamar
-    updateData<Kamar>("kamar", parseInt(selectedKamar), {
-      status: "Terisi",
-    });
+      toast.success("Reservasi berhasil dibuat!");
 
-    toast.success("Reservasi berhasil dibuat!");
+      setTimeout(() => {
+        onNavigate("home");
+      }, 1500);
 
-    setTimeout(() => {
-      onNavigate("home");
-    }, 1500);
+    } catch (error: any) {
+      console.error("Error membuat reservasi:", error);
+      toast.error(error.message || "Terjadi kesalahan saat membuat reservasi");
+    }
   };
 
   if (!user || user.role !== "tamu") {

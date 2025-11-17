@@ -1,0 +1,9 @@
+# Node
+/node_modules
+
+# Python
+
+
+# Java/Maven/Gradle
+/target
+.gradle
