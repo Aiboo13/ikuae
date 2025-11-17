@@ -29,6 +29,15 @@ import {
 } from "./ui/table";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 import { toast } from "sonner";
 import {
   DollarSign,
@@ -39,11 +48,20 @@ import {
   PlusCircle,
   BarChart3,
   ArrowUpRight,
+  FileText,
+  Download,
 } from "lucide-react";
 
 interface AdminPageProps {
   user: UserWithRole | null;
   onNavigate: (page: string) => void;
+}
+
+interface LaporanHarian {
+  id_tamu: number;
+  id_kamar: number;
+  tanggal_checkin: string;
+  total_harga: number;
 }
 
 export const AdminPage: React.FC<AdminPageProps> = ({ user, onNavigate }) => {
@@ -52,6 +70,11 @@ export const AdminPage: React.FC<AdminPageProps> = ({ user, onNavigate }) => {
   const [laporanList, setLaporanList] = useState<LaporanBulanan[]>([]);
   const [kamarList, setKamarList] = useState<Kamar[]>([]);
   const [tamuList, setTamuList] = useState<Tamu[]>([]);
+  const [laporanHarianList, setLaporanHarianList] = useState<LaporanHarian[]>([]);
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedMonth, setSelectedMonth] = useState((new Date().getMonth() + 1).toString());
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString());
+  const [totalHarian, setTotalHarian] = useState(0);
 
   // Check if user is authorized to view admin page
   if (!user || user.role !== "petugas") {
@@ -101,17 +124,60 @@ export const AdminPage: React.FC<AdminPageProps> = ({ user, onNavigate }) => {
     return tamu ? tamu.nama_tamu : "Unknown";
   };
 
+  const loadLaporanHarian = async (tanggal?: string) => {
+    try {
+      const endpoint = tanggal 
+        ? `http://localhost:3001/api/laporanharian/${tanggal}`
+        : "http://localhost:3001/api/laporanharian";
+      
+      const response = await fetch(endpoint);
+      const data = await response.json();
+      
+      // Normalize keys dari uppercase ke lowercase
+      const normalizedData = data.map((item: any) => {
+        const normalized: any = {};
+        Object.keys(item).forEach(key => {
+          normalized[key.toLowerCase()] = item[key];
+        });
+        return normalized;
+      });
+      
+      setLaporanHarianList(normalizedData);
+      
+      // Ambil total pendapatan harian
+      const sumEndpoint = tanggal
+        ? `http://localhost:3001/api/sumlaporanharian/${tanggal}`
+        : "http://localhost:3001/api/sumlaporanharian";
+      
+      const sumResponse = await fetch(sumEndpoint);
+      const sumData = await sumResponse.json();
+      
+      // Handle berbagai format response
+      const total = sumData?.TOTAL_PENDAPATAN_HARIAN 
+        || sumData?.total_pendapatan_harian 
+        || 0;
+      
+      setTotalHarian(Number(total) || 0);
+      
+      toast.success("Laporan harian berhasil dimuat");
+    } catch (error) {
+      console.error("Error loading laporan harian:", error);
+      toast.error("Gagal memuat laporan harian");
+      setLaporanHarianList([]);
+      setTotalHarian(0);
+    }
+  };
+
   const generateLaporan = () => {
-    const now = new Date();
-    const bulan = now.getMonth() + 1;
-    const tahun = now.getFullYear();
+    const bulan = parseInt(selectedMonth);
+    const tahun = parseInt(selectedYear);
 
     const existingLaporan = laporanList.find(
       (l) => l.bulan === bulan && l.tahun === tahun
     );
 
     if (existingLaporan) {
-      toast.error("Laporan bulan ini sudah dibuat!");
+      toast.error(`Laporan untuk ${bulan}/${tahun} sudah dibuat!`);
       return;
     }
 
@@ -138,10 +204,10 @@ export const AdminPage: React.FC<AdminPageProps> = ({ user, onNavigate }) => {
       total_pendapatan: totalPendapatan,
       total_okupansi: totalOkupansi,
       tanggal_dibuat: new Date().toISOString(),
-      catatan_sistem: "Laporan dibuat manual oleh petugas",
+      catatan_sistem: `Laporan periode ${bulan}/${tahun} dibuat oleh petugas`,
     } as any);
 
-    toast.success("Laporan bulanan berhasil dibuat!");
+    toast.success(`Laporan untuk ${bulan}/${tahun} berhasil dibuat!`);
     loadData();
   };
 
@@ -303,11 +369,18 @@ export const AdminPage: React.FC<AdminPageProps> = ({ user, onNavigate }) => {
               Pembayaran
             </TabsTrigger>
             <TabsTrigger
+              value="harian"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-violet-600 data-[state=active]:to-purple-600 data-[state=active]:text-white"
+            >
+              <FileText className="w-4 h-4 mr-2" />
+              Harian
+            </TabsTrigger>
+            <TabsTrigger
               value="laporan"
               className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-violet-600 data-[state=active]:to-purple-600 data-[state=active]:text-white"
             >
               <BarChart3 className="w-4 h-4 mr-2" />
-              Laporan
+              Bulanan
             </TabsTrigger>
           </TabsList>
 
@@ -469,10 +542,125 @@ export const AdminPage: React.FC<AdminPageProps> = ({ user, onNavigate }) => {
             </Card>
           </TabsContent>
 
+          <TabsContent value="harian" className="space-y-4">
+            <Card className="border-0 shadow-xl">
+              <CardHeader className="bg-gradient-to-r from-violet-50 to-purple-50 border-b">
+                <div className="flex justify-between items-center flex-wrap gap-4">
+                  <div>
+                    <CardTitle className="flex items-center gap-2">
+                      <FileText className="w-5 h-5 text-violet-600" />
+                      Laporan Harian
+                    </CardTitle>
+                    <CardDescription>
+                      Lihat transaksi dan pendapatan per hari
+                    </CardDescription>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2">
+                      <Label htmlFor="tanggal" className="text-sm whitespace-nowrap">
+                        Pilih Tanggal:
+                      </Label>
+                      <Input
+                        id="tanggal"
+                        type="date"
+                        value={selectedDate}
+                        onChange={(e) => setSelectedDate(e.target.value)}
+                        className="w-auto"
+                      />
+                    </div>
+                    <Button
+                      onClick={() => loadLaporanHarian(selectedDate)}
+                      className="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 shadow-lg"
+                    >
+                      <Download className="w-4 h-4 mr-2" />
+                      Tampilkan
+                    </Button>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-6">
+                {/* Summary Card */}
+                <div className="mb-6 p-6 bg-gradient-to-r from-violet-50 to-purple-50 rounded-xl border border-violet-100">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600 mb-1">Total Pendapatan Hari Ini</p>
+                      <p className="text-3xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                        {formatRupiah(totalHarian)}
+                      </p>
+                    </div>
+                    <div className="w-16 h-16 bg-gradient-to-r from-violet-600 to-purple-600 rounded-full flex items-center justify-center">
+                      <DollarSign className="w-8 h-8 text-white" />
+                    </div>
+                  </div>
+                  <div className="mt-4 flex items-center gap-2 text-sm text-gray-600">
+                    <Calendar className="w-4 h-4" />
+                    <span>
+                      {selectedDate 
+                        ? new Date(selectedDate).toLocaleDateString("id-ID", {
+                            weekday: "long",
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          })
+                        : "Hari ini"
+                      }
+                    </span>
+                  </div>
+                </div>
+
+                {/* Table */}
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="bg-gray-50">
+                        <TableHead>Tamu</TableHead>
+                        <TableHead>Kamar</TableHead>
+                        <TableHead>Check-in</TableHead>
+                        <TableHead>Total Harga</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {laporanHarianList.length > 0 ? (
+                        laporanHarianList.map((laporan, idx) => (
+                          <TableRow
+                            key={idx}
+                            className="hover:bg-violet-50/50 transition-colors"
+                          >
+                            <TableCell>
+                              {getTamuName(laporan.id_tamu)}
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex items-center gap-2">
+                                <Bed className="w-4 h-4 text-violet-600" />
+                                {getKamarName(laporan.id_kamar)}
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              {formatDate(laporan.tanggal_checkin)}
+                            </TableCell>
+                            <TableCell className="text-violet-600 font-medium">
+                              {formatRupiah(laporan.total_harga)}
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      ) : (
+                        <TableRow>
+                          <TableCell colSpan={4} className="text-center py-8 text-gray-500">
+                            Tidak ada transaksi untuk tanggal ini
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </TableBody>
+                  </Table>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
           <TabsContent value="laporan" className="space-y-4">
             <Card className="border-0 shadow-xl">
               <CardHeader className="bg-gradient-to-r from-violet-50 to-purple-50 border-b">
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center flex-wrap gap-4">
                   <div>
                     <CardTitle className="flex items-center gap-2">
                       <BarChart3 className="w-5 h-5 text-violet-600" />
@@ -482,13 +670,52 @@ export const AdminPage: React.FC<AdminPageProps> = ({ user, onNavigate }) => {
                       Generate dan lihat laporan bulanan
                     </CardDescription>
                   </div>
-                  <Button
-                    onClick={generateLaporan}
-                    className="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 shadow-lg"
-                  >
-                    <PlusCircle className="w-4 h-4 mr-2" />
-                    Generate Laporan
-                  </Button>
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <div className="flex items-center gap-2">
+                      <Label htmlFor="bulan" className="text-sm whitespace-nowrap">
+                        Bulan:
+                      </Label>
+                      <Select value={selectedMonth} onValueChange={setSelectedMonth}>
+                        <SelectTrigger className="w-32">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {[
+                            "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+                            "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+                          ].map((bulan, idx) => (
+                            <SelectItem key={idx + 1} value={(idx + 1).toString()}>
+                              {bulan}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Label htmlFor="tahun" className="text-sm whitespace-nowrap">
+                        Tahun:
+                      </Label>
+                      <Select value={selectedYear} onValueChange={setSelectedYear}>
+                        <SelectTrigger className="w-28">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i).map((year) => (
+                            <SelectItem key={year} value={year.toString()}>
+                              {year}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <Button
+                      onClick={generateLaporan}
+                      className="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 shadow-lg"
+                    >
+                      <PlusCircle className="w-4 h-4 mr-2" />
+                      Generate
+                    </Button>
+                  </div>
                 </div>
               </CardHeader>
               <CardContent className="pt-6">

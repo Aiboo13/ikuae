@@ -42,26 +42,72 @@ interface ReservasiPageProps {
   onNavigate: (page: string) => void;
 }
 
+interface Reservasi {
+  id_reservasi: number;
+  id_kamar: number;
+  id_tamu: number;
+  tanggal_checkin: string;
+  tanggal_checkout: string;
+  status_reservasi: string;
+}
+
 export const ReservasiPage: React.FC<ReservasiPageProps> = ({
   user,
   onNavigate,
 }) => {
   const [kamarList, setKamarList] = useState<Kamar[]>([]);
+  const [reservasiList, setReservasiList] = useState<Reservasi[]>([]);
   const [selectedKamar, setSelectedKamar] = useState("");
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [metodePembayaran, setMetodePembayaran] = useState("");
   const [totalHarga, setTotalHarga] = useState(0);
   const [jumlahHari, setJumlahHari] = useState(0);
+  const [isDateConflict, setIsDateConflict] = useState(false);
 
   useEffect(() => {
     const load = async () => {
       const kamarData = await getData<Kamar>("kamar");
-      setKamarList(kamarData.filter((k) => k.status === "Tersedia"));
+      const reservasiData = await getData<Reservasi>("reservasi");
+      
+      // Ambil semua kamar (tidak filter status)
+      setKamarList(kamarData);
+      
+      // Filter hanya reservasi yang aktif (Dipesan atau Checkin)
+      setReservasiList(
+        reservasiData.filter(
+          (r) => r.status_reservasi === "Dipesan" || r.status_reservasi === "Checkin"
+        )
+      );
     };
 
     load();
   }, []);
+
+  // Fungsi untuk cek apakah ada konflik tanggal dengan reservasi lain
+  const checkDateConflict = (
+    idKamar: number,
+    checkInDate: string,
+    checkOutDate: string
+  ): boolean => {
+    const selectedCheckIn = new Date(checkInDate);
+    const selectedCheckOut = new Date(checkOutDate);
+
+    // Cek apakah ada reservasi lain untuk kamar yang sama dengan range tanggal yang overlap
+    const conflict = reservasiList.some((reservasi) => {
+      if (reservasi.id_kamar !== idKamar) return false;
+
+      const existingCheckIn = new Date(reservasi.tanggal_checkin);
+      const existingCheckOut = new Date(reservasi.tanggal_checkout);
+
+      // Cek overlap: (Start1 <= End2) and (End1 >= Start2)
+      return (
+        selectedCheckIn < existingCheckOut && selectedCheckOut > existingCheckIn
+      );
+    });
+
+    return conflict;
+  };
 
   useEffect(() => {
     if (selectedKamar && checkIn && checkOut) {
@@ -69,15 +115,31 @@ export const ReservasiPage: React.FC<ReservasiPageProps> = ({
         (k) => k.id_kamar === parseInt(selectedKamar)
       );
       if (kamar) {
-        const days = Math.ceil(
-          (new Date(checkOut).getTime() - new Date(checkIn).getTime()) /
-            (1000 * 60 * 60 * 24)
+        // Cek konflik tanggal
+        const hasConflict = checkDateConflict(
+          parseInt(selectedKamar),
+          checkIn,
+          checkOut
         );
-        setJumlahHari(days);
-        setTotalHarga(days > 0 ? days * kamar.harga_per_malam : 0);
+        setIsDateConflict(hasConflict);
+
+        if (hasConflict) {
+          setJumlahHari(0);
+          setTotalHarga(0);
+          toast.error(
+            "Kamar sudah dipesan untuk tanggal tersebut. Silakan pilih tanggal lain."
+          );
+        } else {
+          const days = Math.ceil(
+            (new Date(checkOut).getTime() - new Date(checkIn).getTime()) /
+              (1000 * 60 * 60 * 24)
+          );
+          setJumlahHari(days);
+          setTotalHarga(days > 0 ? days * kamar.harga_per_malam : 0);
+        }
       }
     }
-  }, [selectedKamar, checkIn, checkOut, kamarList]);
+  }, [selectedKamar, checkIn, checkOut, kamarList, reservasiList]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -89,6 +151,12 @@ export const ReservasiPage: React.FC<ReservasiPageProps> = ({
 
     if (new Date(checkIn) >= new Date(checkOut)) {
       toast.error("Tanggal checkout harus setelah check-in!");
+      return;
+    }
+
+    // Cek konflik tanggal sebelum submit
+    if (isDateConflict) {
+      toast.error("Kamar sudah dipesan untuk tanggal tersebut!");
       return;
     }
 
@@ -254,7 +322,13 @@ export const ReservasiPage: React.FC<ReservasiPageProps> = ({
                   </Label>
                   <Select
                     value={selectedKamar}
-                    onValueChange={setSelectedKamar}
+                    onValueChange={(value: string) => {
+                      setSelectedKamar(value);
+                      // Reset tanggal saat ganti kamar
+                      setCheckIn("");
+                      setCheckOut("");
+                      setIsDateConflict(false);
+                    }}
                     required
                   >
                     <SelectTrigger
@@ -269,11 +343,22 @@ export const ReservasiPage: React.FC<ReservasiPageProps> = ({
                           key={kamar.id_kamar}
                           value={kamar.id_kamar.toString()}
                         >
-                          <div className="flex justify-between items-center w-full">
-                            <span className="dark:text-white">
-                              {kamar.tipe_kamar}
-                            </span>
-                            <span className="text-violet-600 dark:text-violet-400 ml-4">
+                          <div className="flex justify-between items-center w-full gap-4">
+                            <div className="flex items-center gap-2">
+                              <span className="dark:text-white">
+                                {kamar.tipe_kamar}
+                              </span>
+                              <span
+                                className={`text-xs px-2 py-0.5 rounded-full ${
+                                  kamar.status === "Tersedia"
+                                    ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
+                                    : "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400"
+                                }`}
+                              >
+                                {kamar.status}
+                              </span>
+                            </div>
+                            <span className="text-violet-600 dark:text-violet-400">
                               {formatRupiah(kamar.harga_per_malam)}
                             </span>
                           </div>
@@ -281,6 +366,11 @@ export const ReservasiPage: React.FC<ReservasiPageProps> = ({
                       ))}
                     </SelectContent>
                   </Select>
+                  {selectedKamar && (
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      💡 Pilih tanggal untuk mengecek ketersediaan kamar
+                    </p>
+                  )}
                 </div>
 
                 {/* Tanggal */}
@@ -299,9 +389,17 @@ export const ReservasiPage: React.FC<ReservasiPageProps> = ({
                       value={checkIn}
                       onChange={(e) => setCheckIn(e.target.value)}
                       min={new Date().toISOString().split("T")[0]}
-                      className="border-violet-200 focus:border-violet-500"
+                      disabled={!selectedKamar}
+                      className={`border-violet-200 focus:border-violet-500 ${
+                        !selectedKamar ? "opacity-50 cursor-not-allowed" : ""
+                      }`}
                       required
                     />
+                    {!selectedKamar && (
+                      <p className="text-xs text-gray-500">
+                        Pilih kamar terlebih dahulu
+                      </p>
+                    )}
                   </div>
 
                   <div className="space-y-2">
@@ -318,11 +416,32 @@ export const ReservasiPage: React.FC<ReservasiPageProps> = ({
                       value={checkOut}
                       onChange={(e) => setCheckOut(e.target.value)}
                       min={checkIn || new Date().toISOString().split("T")[0]}
-                      className="border-violet-200 focus:border-violet-500"
+                      disabled={!selectedKamar || !checkIn}
+                      className={`border-violet-200 focus:border-violet-500 ${
+                        !selectedKamar || !checkIn
+                          ? "opacity-50 cursor-not-allowed"
+                          : ""
+                      }`}
                       required
                     />
+                    {!checkIn && selectedKamar && (
+                      <p className="text-xs text-gray-500">
+                        Pilih tanggal check-in terlebih dahulu
+                      </p>
+                    )}
                   </div>
                 </div>
+
+                {/* Peringatan jika ada konflik */}
+                {isDateConflict && (
+                  <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                    <p className="text-red-800 dark:text-red-200 text-sm flex items-center gap-2">
+                      <span className="text-lg">⚠️</span>
+                      Kamar sudah dipesan untuk tanggal tersebut. Silakan pilih
+                      tanggal lain.
+                    </p>
+                  </div>
+                )}
 
                 {/* Metode Pembayaran */}
                 <div className="space-y-2">
@@ -385,7 +504,8 @@ export const ReservasiPage: React.FC<ReservasiPageProps> = ({
                   </Button>
                   <Button
                     type="submit"
-                    className="flex-1 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 shadow-lg"
+                    disabled={isDateConflict || !selectedKamar || !checkIn || !checkOut}
+                    className="flex-1 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Check className="w-4 h-4 mr-2" />
                     Konfirmasi Reservasi
@@ -407,9 +527,23 @@ export const ReservasiPage: React.FC<ReservasiPageProps> = ({
               <CardContent className="pt-6 space-y-4">
                 {selectedKamarData && (
                   <div className="space-y-3">
-                    <div className="flex justify-between items-center pb-3 border-b">
-                      <span className="text-gray-600">Tipe Kamar</span>
-                      <span>{selectedKamarData.tipe_kamar}</span>
+                    <div className="space-y-2 pb-3 border-b">
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600">Tipe Kamar</span>
+                        <span className="font-medium">{selectedKamarData.tipe_kamar}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-gray-500">Status:</span>
+                        <span
+                          className={`text-xs px-2 py-1 rounded-full font-medium ${
+                            selectedKamarData.status === "Tersedia"
+                              ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
+                              : "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400"
+                          }`}
+                        >
+                          {selectedKamarData.status}
+                        </span>
+                      </div>
                     </div>
 
                     {jumlahHari > 0 && (
