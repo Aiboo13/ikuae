@@ -16,6 +16,10 @@ const laporanbulananRouter = require("./routers/laporanbulanan");
 const pembayaranRouter = require("./routers/pembayaran");
 const petugasRouter = require("./routers/petugas");
 const reservasiRouter = require("./routers/reservasi");
+const laporanharianRouter = require("./routers/laporanharian");
+const sumlaporanharianRouter = require("./routers/sumlaporanharian");
+
+
 
 app.use("/api", reservasiRouter);
 app.use("/api", reservasiApiRouter);
@@ -26,13 +30,15 @@ app.use("/api", kamarRouter);
 app.use("/api", fasilitasRouter);
 app.use("/api", tamuRouter);
 app.use("/api", tamuApiRouter);
+app.use("/api", laporanharianRouter);
+app.use("/api", sumlaporanharianRouter);
 
 // endpoint root
 
 // jalankan seeder Oracle
 // require("./Db/seed");
 
-app.get("/", (res) => {
+app.get("/", (req, res) => {
   res.send("Server hotel aktif dan database sudah di-seed.");
 });
 

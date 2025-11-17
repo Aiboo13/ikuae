@@ -130,22 +130,23 @@ export const ReservasiPage: React.FC<ReservasiPageProps> = ({
   if (!user || user.role !== "tamu") {
     return (
       <div className="min-h-screen bg-gradient-to-br from-violet-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4">
-        <Card className="shadow-2xl border-0 dark:bg-gray-900 dark:shadow-gray-950 animate-slide-in-up">
-          <CardHeader className="text-center">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-r from-violet-600 to-purple-600 flex items-center justify-center mx-auto mb-4">
-              <User className="w-8 h-8 text-white" />
+        <Card className="shadow-2xl border-0 dark:bg-gray-900 dark:shadow-gray-950 animate-slide-in-up max-w-md w-full">
+          <CardHeader className="text-center pb-6">
+            <div className="w-20 h-20 rounded-full bg-gradient-to-r from-violet-600 to-purple-600 flex items-center justify-center mx-auto mb-6">
+              <User className="w-10 h-10 text-white" />
             </div>
-            <CardTitle className="text-2xl dark:text-white">
+            <CardTitle className="text-3xl dark:text-white mb-3">
               Akses Ditolak
             </CardTitle>
-            <CardDescription className="dark:text-gray-400">
+            <CardDescription className="dark:text-gray-400 text-base">
               Anda harus login sebagai tamu untuk membuat reservasi
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-2">
             <Button
               onClick={() => onNavigate("login")}
-              className="w-full bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700"
+              className="w-full bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 h-12 text-base"
+              size="lg"
             >
               Login
             </Button>
