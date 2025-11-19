@@ -157,9 +157,15 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, user }) => {
                 Pesan Sekarang
               </Button>
               <Button
+                onClick={() => {
+                  document.getElementById("lihat-kamar")?.scrollIntoView({ 
+                    behavior: "smooth", 
+                    block: "start" 
+                  });
+                }}
                 size="lg"
-                variant="outline"
-                className="border-white text-white hover:bg-white/10"
+                variant=""
+                className="border-white text-black bg-white/10 "
               >
                 Lihat Kamar
               </Button>
@@ -202,15 +208,15 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, user }) => {
       </div>
 
       {/* Kamar List */}
-      <div className="container mx-auto px-4 py-12 md:py-16 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-900">
+      <div className="container mx-auto px-4 py-12 md:py-16 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-900" >
         <div className="text-center mb-8 md:mb-12 animate-slide-in-up">
           <div className="inline-block bg-gradient-to-r from-violet-600 to-purple-600 text-white px-4 py-1 rounded-full text-sm mb-4">
             {stats.kamarTersedia} dari {stats.totalKamar} Kamar Tersedia
           </div>
-          <h2 className="text-3xl md:text-4xl mb-3 md:mb-4 dark:text-white">
+          <h2 className="text-3xl md:text-4xl mb-3 md:mb-4 dark:text-white ">
             Pilihan Kamar Terbaik
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 text-base md:text-lg max-w-2xl mx-auto px-4">
+          <p className="text-gray-600 dark:text-gray-400 text-base md:text-lg max-w-2xl mx-auto px-4" id="lihat-kamar">
             Tersedia{" "}
             {kamarList.filter((k) => k.tipe_kamar === "Standard").length} kamar
             Standard,{" "}
