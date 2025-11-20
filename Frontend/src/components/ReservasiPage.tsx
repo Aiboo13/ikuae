@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  getData,
-  Kamar,
-  formatRupiah,
-  Tamu,
-  Petugas,
-} from "../lib/db";
+import { getData, Kamar, formatRupiah, Tamu, Petugas } from "../lib/db";
 import { UserWithRole } from "../lib/types";
 import {
   Card,
@@ -69,14 +63,15 @@ export const ReservasiPage: React.FC<ReservasiPageProps> = ({
     const load = async () => {
       const kamarData = await getData<Kamar>("kamar");
       const reservasiData = await getData<Reservasi>("reservasi");
-      
+
       // Ambil semua kamar (tidak filter status)
       setKamarList(kamarData);
-      
+
       // Filter hanya reservasi yang aktif (Dipesan atau Checkin)
       setReservasiList(
         reservasiData.filter(
-          (r) => r.status_reservasi === "Dipesan" || r.status_reservasi === "Checkin"
+          (r) =>
+            r.status_reservasi === "Dipesan" || r.status_reservasi === "Checkin"
         )
       );
     };
@@ -144,8 +139,8 @@ export const ReservasiPage: React.FC<ReservasiPageProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!user || user.role !== "tamu") {
-      toast.error("Anda harus login sebagai tamu!");
+    if (!user || (user.role !== "tamu" && user.role !== "petugas")) {
+      toast.error("Anda harus login sebagai tamu atau petugas!");
       return;
     }
 
@@ -188,14 +183,13 @@ export const ReservasiPage: React.FC<ReservasiPageProps> = ({
       setTimeout(() => {
         onNavigate("home");
       }, 1500);
-
     } catch (error: any) {
       console.error("Error membuat reservasi:", error);
       toast.error(error.message || "Terjadi kesalahan saat membuat reservasi");
     }
   };
 
-  if (!user || user.role !== "tamu") {
+  if (!user || (user.role !== "tamu" && user.role !== "petugas")) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-violet-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4">
         <Card className="shadow-2xl border-0 dark:bg-gray-900 dark:shadow-gray-950 animate-slide-in-up max-w-md w-full">
@@ -207,7 +201,7 @@ export const ReservasiPage: React.FC<ReservasiPageProps> = ({
               Akses Ditolak
             </CardTitle>
             <CardDescription className="dark:text-gray-400 text-base">
-              Anda harus login sebagai tamu untuk membuat reservasi
+              Anda harus login sebagai tamu atau petugas untuk membuat reservasi
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-2">
@@ -504,7 +498,9 @@ export const ReservasiPage: React.FC<ReservasiPageProps> = ({
                   </Button>
                   <Button
                     type="submit"
-                    disabled={isDateConflict || !selectedKamar || !checkIn || !checkOut}
+                    disabled={
+                      isDateConflict || !selectedKamar || !checkIn || !checkOut
+                    }
                     className="flex-1 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Check className="w-4 h-4 mr-2" />
@@ -530,7 +526,9 @@ export const ReservasiPage: React.FC<ReservasiPageProps> = ({
                     <div className="space-y-2 pb-3 border-b">
                       <div className="flex justify-between items-center">
                         <span className="text-gray-600">Tipe Kamar</span>
-                        <span className="font-medium">{selectedKamarData.tipe_kamar}</span>
+                        <span className="font-medium">
+                          {selectedKamarData.tipe_kamar}
+                        </span>
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="text-xs text-gray-500">Status:</span>
