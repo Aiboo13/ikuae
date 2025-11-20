@@ -8,7 +8,7 @@ import { ImageWithFallback } from "./figma/ImageWithFallback";
 import {Wifi,Tv,Wind,Check,Star,Users,MapPin,Phone,Mail,Award,Hotel,} from "lucide-react";
 
 interface HomePageProps {
-  onNavigate: (page: string) => void;
+  onNavigate: (page: string, params?: any) => void;
   user: UserWithRole | null;
 }
 
@@ -312,14 +312,12 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, user }) => {
                 <CardFooter className="pt-0">
                   <Button
                     className="w-full bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 shadow-lg group-hover:shadow-xl transition-all"
-                    onClick={() => onNavigate("reservasi")}
-                    disabled={kamar.status !== "Tersedia" || !user}
+                    onClick={() => onNavigate("reservasi", { id_kamar: kamar.id_kamar })}
+                    disabled={!user}
                   >
                     {!user
                       ? "Login untuk Reservasi"
-                      : kamar.status === "Tersedia"
-                      ? "Pesan Sekarang"
-                      : "Tidak Tersedia"}
+                      : "Pesan Sekarang"}
                   </Button>
                 </CardFooter>
               </Card>

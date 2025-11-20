@@ -85,12 +85,6 @@ router.post('/reservasi', async (req, res) => {
       }
     );
 
-    // 4. Update status kamar menjadi 'Terisi'
-    await connection.execute(
-      `UPDATE KAMAR SET STATUS = 'Terisi' WHERE ID_KAMAR = :id_kamar`,
-      { id_kamar: id_kamar }
-    );
-
     // Commit semua transaksi
     await connection.commit();
 

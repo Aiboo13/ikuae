@@ -13,6 +13,7 @@ import { Registrasi } from "./components/Registrasi";
 export default function App() {
   const [currentPage, setCurrentPage] = useState("home");
   const [user, setUser] = useState<UserWithRole | null>(null);
+  const [selectedKamarId, setSelectedKamarId] = useState<number | undefined>(undefined);
 
   useEffect(() => {
     // Initialize data dari localStorage
@@ -36,8 +37,16 @@ export default function App() {
     setCurrentPage("home");
   };
 
-  const handleNavigate = (page: string) => {
+  const handleNavigate = (page: string, params?: any) => {
     setCurrentPage(page);
+    
+    // Handle parameter untuk reservasi
+    if (page === "reservasi" && params?.id_kamar) {
+      setSelectedKamarId(params.id_kamar);
+    } else if (page !== "reservasi") {
+      // Reset selectedKamarId jika pindah ke halaman lain
+      setSelectedKamarId(undefined);
+    }
   };
 
   const renderPage = () => {
@@ -50,7 +59,7 @@ export default function App() {
         return <Registrasi onNavigate={handleNavigate} />;
       case "reservasi":
         return user ? (
-          <ReservasiPage onNavigate={handleNavigate} user={user} />
+          <ReservasiPage onNavigate={handleNavigate} user={user} selectedKamarId={selectedKamarId} />
         ) : (
           <HomePage onNavigate={handleNavigate} user={user} />
         );

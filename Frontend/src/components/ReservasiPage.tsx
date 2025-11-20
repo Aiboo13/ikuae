@@ -33,7 +33,8 @@ import {
 
 interface ReservasiPageProps {
   user: UserWithRole | null;
-  onNavigate: (page: string) => void;
+  onNavigate: (page: string, params?: any) => void;
+  selectedKamarId?: number;
 }
 
 interface Reservasi {
@@ -48,6 +49,7 @@ interface Reservasi {
 export const ReservasiPage: React.FC<ReservasiPageProps> = ({
   user,
   onNavigate,
+  selectedKamarId,
 }) => {
   const [kamarList, setKamarList] = useState<Kamar[]>([]);
   const [reservasiList, setReservasiList] = useState<Reservasi[]>([]);
@@ -78,6 +80,36 @@ export const ReservasiPage: React.FC<ReservasiPageProps> = ({
 
     load();
   }, []);
+
+  // Auto-select kamar jika selectedKamarId diberikan
+  useEffect(() => {
+    if (selectedKamarId && kamarList.length > 0 && reservasiList.length >= 0) {
+      setSelectedKamar(selectedKamarId.toString());
+      setIsDateConflict(false);
+      
+      // Auto-fill tanggal check-in berdasarkan reservasi terakhir
+      const lastCheckout = getLastCheckoutDate(selectedKamarId);
+      if (lastCheckout) {
+        const nextDay = new Date(lastCheckout);
+        nextDay.setDate(nextDay.getDate() + 1);
+        setCheckIn(nextDay.toISOString().split('T')[0]);
+      } else {
+        setCheckIn(new Date().toISOString().split('T')[0]);
+      }
+    }
+  }, [selectedKamarId, kamarList, reservasiList]);
+
+  // Fungsi untuk mendapatkan tanggal checkout terakhir dari kamar
+  const getLastCheckoutDate = (idKamar: number): string | null => {
+    const kamarReservations = reservasiList
+      .filter((r) => r.id_kamar === idKamar)
+      .sort((a, b) => new Date(b.tanggal_checkout).getTime() - new Date(a.tanggal_checkout).getTime());
+
+    if (kamarReservations.length > 0) {
+      return kamarReservations[0].tanggal_checkout;
+    }
+    return null;
+  };
 
   // Fungsi untuk cek apakah ada konflik tanggal dengan reservasi lain
   const checkDateConflict = (
@@ -318,10 +350,22 @@ export const ReservasiPage: React.FC<ReservasiPageProps> = ({
                     value={selectedKamar}
                     onValueChange={(value: string) => {
                       setSelectedKamar(value);
-                      // Reset tanggal saat ganti kamar
-                      setCheckIn("");
-                      setCheckOut("");
                       setIsDateConflict(false);
+                      
+                      // Auto-fill tanggal check-in berdasarkan reservasi terakhir
+                      const lastCheckout = getLastCheckoutDate(parseInt(value));
+                      if (lastCheckout) {
+                        // Set check-in ke tanggal setelah checkout terakhir
+                        const nextDay = new Date(lastCheckout);
+                        nextDay.setDate(nextDay.getDate() + 1);
+                        setCheckIn(nextDay.toISOString().split('T')[0]);
+                      } else {
+                        // Jika tidak ada reservasi sebelumnya, set ke hari ini
+                        setCheckIn(new Date().toISOString().split('T')[0]);
+                      }
+                      
+                      // Reset checkout
+                      setCheckOut("");
                     }}
                     required
                   >
@@ -362,7 +406,7 @@ export const ReservasiPage: React.FC<ReservasiPageProps> = ({
                   </Select>
                   {selectedKamar && (
                     <p className="text-xs text-gray-500 dark:text-gray-400">
-                      💡 Pilih tanggal untuk mengecek ketersediaan kamar
+                      💡 Tanggal check-in otomatis disesuaikan dengan reservasi terakhir
                     </p>
                   )}
                 </div>
